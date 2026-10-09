@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}My Applications — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1 class="h3 mb-0">My Applications</h1></div></div>
+<div class="container">
+  <div class="mb-3 d-flex flex-wrap gap-2">
+    <a class="btn btn-sm {% if not status %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'applications:mine' %}">All</a>
+    {% for v,l in statuses %}<a class="btn btn-sm {% if status == v %}btn-primary{% else %}btn-outline-primary{% endif %}" href="?status={{ v }}">{{ l }}</a>{% endfor %}
+  </div>
+  {% if page_obj %}
+  <div class="card-jh card-static table-responsive"><table class="table table-jh align-middle mb-0">
+    <thead><tr><th>Job</th><th>Company</th><th>Applied</th><th>Status</th><th></th></tr></thead>
+    <tbody>{% for a in page_obj %}<tr>
+      <td><a class="fw-semibold text-decoration-none" href="{{ a.job.get_absolute_url }}">{{ a.job.title }}</a></td>
+      <td>{{ a.job.company.name }}</td><td>{{ a.created_at|date:"d M Y" }}</td>
+      <td>{% include "partials/status_badge.html" with status=a.status label=a.get_status_display %}</td>
+      <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{{ a.get_absolute_url }}">View</a></td></tr>{% endfor %}</tbody></table></div>
+  {% include "partials/pagination.html" %}
+  {% elif status %}{% include "partials/empty.html" with title="No applications with this status." text="Try a different filter." icon="bi-funnel" url="/applications/my/" button="Show all" %}
+  {% else %}{% include "partials/empty.html" with title="You haven't applied for any jobs yet." text="Find a job you like and click Apply Now." icon="bi-file-earmark-text" url="/jobs/" button="Browse jobs" %}{% endif %}
+</div>
+{% endblock %}

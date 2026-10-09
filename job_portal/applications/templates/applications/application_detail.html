@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Application #{{ app.reference }} — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <h1 class="h3 mb-0">Application #{{ app.reference }}</h1>{% include "partials/status_badge.html" with status=app.status label=app.get_status_display %}</div></div>
+<div class="container"><div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card-jh card-static p-4 mb-3"><dl class="row mb-0">
+      <dt class="col-sm-3">Job</dt><dd class="col-sm-9"><a href="{{ app.job.get_absolute_url }}">{{ app.job.title }}</a></dd>
+      <dt class="col-sm-3">Company</dt><dd class="col-sm-9">{{ app.job.company.name }}</dd>
+      <dt class="col-sm-3">Applicant</dt><dd class="col-sm-9">{{ app.full_name }}</dd>
+      <dt class="col-sm-3">Status</dt><dd class="col-sm-9">{% include "partials/status_badge.html" with status=app.status label=app.get_status_display %}</dd>
+      <dt class="col-sm-3">Applied</dt><dd class="col-sm-9">{{ app.created_at|date:"d F Y" }}</dd>
+      <dt class="col-sm-3">Email</dt><dd class="col-sm-9">{{ app.email }}</dd>
+      <dt class="col-sm-3">Phone</dt><dd class="col-sm-9">{{ app.phone }}</dd>
+      <dt class="col-sm-3">CV</dt><dd class="col-sm-9">{% if app.cv %}<a class="btn btn-sm btn-outline-primary" href="{% url 'applications:cv' app.pk %}"><i class="bi bi-download"></i> Download CV</a> <span class="small text-muted-jh">{{ app.cv_filename }}</span>{% else %}No CV attached{% endif %}</dd>
+    </dl></div>
+    <div class="card-jh card-static p-4"><h2 class="h5">Cover letter</h2><div class="prose-lines">{{ app.cover_letter|default:"No cover letter provided." }}</div></div>
+  </div>
+  <div class="col-lg-4">
+    {% if is_employer_view %}
+    <div class="card-jh card-static p-4 mb-3"><h2 class="h6">Update status</h2>
+      <form method="post" action="{% url 'applications:status' app.pk %}">{% csrf_token %}
+        <select class="form-select mb-2" name="status" aria-label="Status">{% for v,l in statuses %}<option value="{{ v }}" {% if v == app.status %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+        <button class="btn btn-primary w-100">Update</button></form></div>
+    {% if profile %}<div class="card-jh card-static p-4 mb-3"><h2 class="h6">Applicant profile</h2>
+      <p class="small mb-1"><strong>{{ profile.professional_title|default:"—" }}</strong></p>
+      <p class="small text-muted-jh">{{ profile.location }}{% if profile.years_of_experience %} · {{ profile.years_of_experience }} yr experience{% endif %}</p>
+      <div class="d-flex flex-wrap gap-1">{% for s in profile.skills_list %}<span class="meta-chip">{{ s }}</span>{% endfor %}</div></div>{% endif %}
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'applications:received' %}">← All applications</a>
+    {% else %}
+    <div class="card-jh card-static p-4"><p class="small text-muted-jh mb-2">The employer updates your status as they review your application. You can't change it yourself.</p>
+      <a class="btn btn-outline-secondary btn-sm" href="{% url 'applications:mine' %}">← My applications</a></div>
+    {% endif %}
+  </div>
+</div></div>
+{% endblock %}

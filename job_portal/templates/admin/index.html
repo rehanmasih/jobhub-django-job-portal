@@ -1,0 +1,5 @@
+{% extends "admin/index.html" %}
+{% block content %}
+<p style="margin:0 0 1rem"><a href="{% url 'dashboard:platform' %}" style="font-weight:600">📊 Open the platform statistics dashboard</a></p>
+{{ block.super }}
+{% endblock %}

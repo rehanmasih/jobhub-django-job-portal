@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My Jobs — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <h1 class="h3 mb-0">My Jobs</h1><a class="btn btn-accent" href="{% url 'jobs:create' %}"><i class="bi bi-plus-lg"></i> Post a Job</a></div></div>
+<div class="container">
+  <div class="mb-3 d-flex flex-wrap gap-2">
+    <a class="btn btn-sm {% if not status %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'jobs:employer_jobs' %}">All</a>
+    {% for v,l in statuses %}<a class="btn btn-sm {% if status == v %}btn-primary{% else %}btn-outline-primary{% endif %}" href="?status={{ v }}">{{ l }}</a>{% endfor %}
+  </div>
+  {% if page_obj %}
+  <div class="card-jh card-static table-responsive"><table class="table table-jh align-middle mb-0">
+    <thead><tr><th>Job</th><th>Status</th><th>Deadline</th><th class="text-center">Applications</th><th class="text-end">Actions</th></tr></thead>
+    <tbody>{% for job in page_obj %}
+    <tr>
+      <td><a class="fw-semibold text-decoration-none" href="{{ job.get_absolute_url }}">{{ job.title }}</a><div class="small text-muted-jh">{{ job.category.name }} · {{ job.location }}</div></td>
+      <td>{% include "partials/status_badge.html" with status=job.effective_status label=job.effective_status_label %}</td>
+      <td>{{ job.deadline|date:"d M Y" }}</td>
+      <td class="text-center"><a href="{% url 'applications:received' %}?job={{ job.slug }}">{{ job.app_count }}</a></td>
+      <td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'jobs:edit' job.slug %}">Edit</a>
+        {% if job.status == 'active' %}<form class="d-inline" method="post" action="{% url 'jobs:close' job.slug %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">Close</button></form>
+        {% elif job.status != 'draft' %}<form class="d-inline" method="post" action="{% url 'jobs:reopen' job.slug %}">{% csrf_token %}<button class="btn btn-sm btn-outline-success">Reopen</button></form>{% endif %}
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'jobs:delete' job.slug %}">Delete</a>
+      </td></tr>{% endfor %}</tbody></table></div>
+  {% include "partials/pagination.html" %}
+  {% else %}{% include "partials/empty.html" with title="You haven't posted any jobs yet." text="Post your first job to start receiving applications." icon="bi-briefcase" url="/employer/jobs/new/" button="Post a Job" %}{% endif %}
+</div>
+{% endblock %}

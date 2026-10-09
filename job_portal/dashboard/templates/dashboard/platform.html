@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Platform Dashboard — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container d-flex justify-content-between align-items-center"><div><h1 class="h3 mb-1">Platform Dashboard</h1><p class="text-muted-jh mb-0">Live statistics from the database</p></div><a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Open admin</a></div></div>
+<div class="container">
+  <div class="row g-3 mb-4">
+    {% with u=users j=jobs a=apps %}
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ u.total }}</div><div class="lbl">Total Users</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ u.seekers }}</div><div class="lbl">Job Seekers</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ u.employers }}</div><div class="lbl">Employers</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ companies }}</div><div class="lbl">Companies</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ j.total }}</div><div class="lbl">Total Jobs</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ j.active }}</div><div class="lbl">Active Jobs</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ j.closed }}</div><div class="lbl">Closed Jobs</div></div></div>
+    <div class="col-6 col-md-3"><div class="card-jh stat-card"><div class="num">{{ saved }}</div><div class="lbl">Saved Jobs</div></div></div>
+    <div class="col-6 col-md-4"><div class="card-jh stat-card"><div class="num">{{ a.total }}</div><div class="lbl">Total Applications</div></div></div>
+    <div class="col-6 col-md-4"><div class="card-jh stat-card"><div class="num">{{ a.pending }}</div><div class="lbl">Pending Applications</div></div></div>
+    <div class="col-12 col-md-4"><div class="card-jh stat-card"><div class="num">{{ a.shortlisted }}</div><div class="lbl">Shortlisted Applications</div></div></div>
+    {% endwith %}
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-6"><h2 class="h5">Latest jobs</h2><div class="card-jh card-static"><ul class="list-group list-group-flush">
+      {% for j in latest_jobs %}<li class="list-group-item d-flex justify-content-between"><span><a href="{{ j.get_absolute_url }}" class="text-decoration-none">{{ j.title }}</a> <span class="small text-muted-jh">· {{ j.company.name }}</span></span>{% include "partials/status_badge.html" with status=j.effective_status label=j.effective_status_label %}</li>
+      {% empty %}<li class="list-group-item text-muted-jh">No jobs yet.</li>{% endfor %}</ul></div></div>
+    <div class="col-lg-6"><h2 class="h5">Latest applications</h2><div class="card-jh card-static"><ul class="list-group list-group-flush">
+      {% for a in latest_apps %}<li class="list-group-item d-flex justify-content-between"><span>{{ a.full_name }} <span class="small text-muted-jh">→ {{ a.job.title }}</span></span>{% include "partials/status_badge.html" with status=a.status label=a.get_status_display %}</li>
+      {% empty %}<li class="list-group-item text-muted-jh">No applications yet.</li>{% endfor %}</ul></div></div>
+    <div class="col-lg-6"><h2 class="h5">Top categories</h2><div class="card-jh card-static"><ul class="list-group list-group-flush">
+      {% for c in top_categories %}<li class="list-group-item d-flex justify-content-between">{{ c.name }}<span class="fw-semibold">{{ c.n }} job{{ c.n|pluralize }}</span></li>{% empty %}<li class="list-group-item text-muted-jh">No categories yet.</li>{% endfor %}</ul></div></div>
+    <div class="col-lg-6"><h2 class="h5">Companies with most jobs</h2><div class="card-jh card-static"><ul class="list-group list-group-flush">
+      {% for c in top_companies %}<li class="list-group-item d-flex justify-content-between"><a class="text-decoration-none" href="{{ c.get_absolute_url }}">{{ c.name }}</a><span class="fw-semibold">{{ c.n }} job{{ c.n|pluralize }}</span></li>{% empty %}<li class="list-group-item text-muted-jh">No companies yet.</li>{% endfor %}</ul></div></div>
+  </div>
+</div>
+{% endblock %}

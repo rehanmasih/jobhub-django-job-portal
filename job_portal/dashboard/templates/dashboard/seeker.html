@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1 class="h3 mb-1">Job Seeker Dashboard</h1><p class="text-muted-jh mb-0">Hello, {{ user.first_name|default:user.username }}!</p></div></div>
+<div class="container">
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ stats.total }}</div><div class="lbl">Applications</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ stats.pending }}</div><div class="lbl">Pending</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ stats.reviewed }}</div><div class="lbl">Reviewed</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ stats.shortlisted }}</div><div class="lbl">Shortlisted</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ stats.accepted }}</div><div class="lbl">Accepted</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ stats.saved }}</div><div class="lbl">Saved Jobs</div></div></div>
+  </div>
+  {% if not profile.cv %}<div class="alert alert-info">You haven't uploaded a CV yet. <a href="{% url 'accounts:profile' %}">Complete your profile</a> to apply faster.</div>{% endif %}
+  <div class="d-flex justify-content-between align-items-end"><h2 class="h5">Recent applications</h2><a href="{% url 'applications:mine' %}">View all</a></div>
+  {% if recent %}
+  <div class="card-jh card-static table-responsive mt-2"><table class="table table-jh align-middle mb-0">
+    <thead><tr><th>Job</th><th>Company</th><th>Applied</th><th>Status</th><th></th></tr></thead>
+    <tbody>{% for a in recent %}<tr><td>{{ a.job.title }}</td><td>{{ a.job.company.name }}</td><td>{{ a.created_at|date:"d M Y" }}</td>
+      <td>{% include "partials/status_badge.html" with status=a.status label=a.get_status_display %}</td><td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{{ a.get_absolute_url }}">View</a></td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="mt-2">{% include "partials/empty.html" with title="You haven't applied for any jobs yet." text="Browse jobs and apply in a few clicks." icon="bi-file-earmark-text" url="/jobs/" button="Browse jobs" %}</div>{% endif %}
+</div>
+{% endblock %}

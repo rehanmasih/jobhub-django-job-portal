@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Apply — {{ job.title }} — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1 class="h3 mb-1">Apply for {{ job.title }}</h1><div class="text-muted-jh">{{ job.company.name }} · {{ job.location }} · Deadline {{ job.deadline|date:"d M Y" }}</div></div></div>
+<div class="container"><div class="row"><div class="col-lg-8">
+  <form method="post" enctype="multipart/form-data" class="card-jh card-static p-4" novalidate>{% csrf_token %}
+    {% include "partials/form.html" with form=form %}
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-accent" type="submit">Submit application</button><a class="btn btn-outline-secondary" href="{{ job.get_absolute_url }}">Cancel</a></div>
+  </form>
+</div></div></div>
+{% endblock %}

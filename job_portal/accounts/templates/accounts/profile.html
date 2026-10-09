@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Profile — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container">
+  <h1 class="h3 mb-1">My Profile</h1><p class="text-muted-jh mb-0">Keep your profile and CV up to date so employers can find you.</p>
+</div></div>
+<div class="container"><div class="row g-4">
+  <div class="col-lg-8">
+    <form method="post" enctype="multipart/form-data" class="card-jh card-static p-4" novalidate>{% csrf_token %}
+      {% include "partials/form.html" with form=form %}
+      <button class="btn btn-primary mt-4" type="submit">Save profile</button>
+    </form>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-jh card-static p-4 mb-3">
+      <h2 class="h6">Curriculum Vitae</h2>
+      {% if profile.cv %}
+        <p class="mb-2"><span class="status-badge badge-active"><i class="bi bi-check-circle"></i> CV Uploaded</span></p>
+        <p class="small text-muted-jh mb-2">{{ profile.cv.name }}</p>
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:download_cv' %}"><i class="bi bi-download"></i> Download CV</a>
+        <p class="small text-muted-jh mt-2 mb-0">To replace it, choose a new file in the form and save.</p>
+      {% else %}
+        <p class="text-muted-jh mb-0">No CV uploaded yet. Add a PDF, DOC or DOCX (max 5 MB) using the form.</p>
+      {% endif %}
+    </div>
+    {% if profile.profile_picture %}<div class="card-jh card-static p-3 text-center"><img class="rounded-circle" src="{{ profile.profile_picture.url }}" alt="Profile picture" width="110" height="110" style="object-fit:cover"></div>{% endif %}
+    <a class="btn btn-outline-secondary btn-sm mt-3" href="{% url 'accounts:password_change' %}">Change password</a>
+  </div>
+</div></div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Access denied — JOBHUB{% endblock %}
+{% block content %}
+<div class="container section text-center">
+  <i class="bi bi-shield-lock display-3 text-muted"></i>
+  <h1 class="h3 mt-3">Access denied</h1>
+  <p class="text-muted-jh">You don't have permission to view this page.</p>
+  <a class="btn btn-primary" href="{% url 'jobs:home' %}">Back to home</a>
+</div>
+{% endblock %}

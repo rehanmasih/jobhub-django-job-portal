@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+.env
+db.sqlite3
+.idea/
+.vscode/
+*.log
+staticfiles/
+.DS_Store
+# uploaded (non-demo) files
+media/cvs/applications/

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit job{% else %}Post a job{% endif %} — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1 class="h3 mb-0">{% if editing %}Edit “{{ job.title }}”{% else %}Post a Job{% endif %}</h1></div></div>
+<div class="container"><div class="row"><div class="col-lg-9">
+  <form method="post" class="card-jh card-static p-4" novalidate>{% csrf_token %}
+    {% include "partials/form.html" with form=form %}
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">{% if editing %}Save changes{% else %}Publish job{% endif %}</button><a class="btn btn-outline-secondary" href="{% url 'jobs:employer_jobs' %}">Cancel</a></div>
+  </form>
+</div></div></div>
+{% endblock %}

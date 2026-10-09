@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load job_extras %}
+{% block title %}Browse Jobs — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container">
+  <h1 class="h3 mb-1">Browse Jobs</h1>
+  <p class="text-muted-jh mb-0">{{ page_obj.paginator.count }} job{{ page_obj.paginator.count|pluralize }} found</p>
+</div></div>
+<div class="container">
+  <button class="btn btn-outline-primary d-lg-none mb-3 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#filters"><i class="bi bi-funnel"></i> Search &amp; filters</button>
+  <div class="row g-4">
+    <aside class="col-lg-3"><div class="collapse d-lg-block" id="filters">
+      <form method="get" class="card-jh card-static p-3 filter-panel">
+        <div class="mb-3"><label class="form-label" for="q">Keyword</label><input id="q" class="form-control" name="q" value="{{ f.q }}" placeholder="Title, skill, company"></div>
+        <div class="mb-3"><label class="form-label" for="category">Category</label><select id="category" name="category" class="form-select"><option value="">All categories</option>{% for c in categories %}<option value="{{ c.slug }}" {% if f.category == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+        <div class="mb-3"><label class="form-label" for="location">Location</label><select id="location" name="location" class="form-select"><option value="">Any location</option>{% for l in locations %}<option {% if f.location == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="mb-3"><label class="form-label" for="type">Job type</label><select id="type" name="type" class="form-select"><option value="">All types</option>{% for v,l in job_types %}<option value="{{ v }}" {% if f.type == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="mb-3"><label class="form-label" for="experience">Experience</label><select id="experience" name="experience" class="form-select"><option value="">Any level</option>{% for v,l in experience_levels %}<option value="{{ v }}" {% if f.experience == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label class="form-label" for="min_salary">Min salary</label><select id="min_salary" name="min_salary" class="form-select"><option value="">Any</option>{% for s in min_salaries %}<option value="{{ s }}" {% if f.min_salary == s|stringformat:"d" %}selected{% endif %}>{{ s|pkr }}</option>{% endfor %}</select></div>
+          <div class="col-6"><label class="form-label" for="max_salary">Max salary</label><select id="max_salary" name="max_salary" class="form-select"><option value="">Any</option>{% for s in max_salaries %}<option value="{{ s }}" {% if f.max_salary == s|stringformat:"d" %}selected{% endif %}>{{ s|pkr }}</option>{% endfor %}</select></div>
+          <div class="col-12 form-text mt-0">Monthly, in PKR</div>
+        </div>
+        <div class="mb-3"><label class="form-label" for="remote">Work mode</label><select id="remote" name="remote" class="form-select">{% for v,l in remote_choices %}<option value="{{ v }}" {% if f.remote == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="mb-3"><label class="form-label" for="sort">Sort by</label><select id="sort" name="sort" class="form-select">{% for v,l in sorts %}<option value="{{ v }}" {% if f.sort == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <button class="btn btn-primary w-100" type="submit">Apply filters</button>
+        {% if has_filters %}<a class="btn btn-link w-100 mt-1" href="{% url 'jobs:list' %}">Clear all</a>{% endif %}
+      </form>
+    </div></aside>
+    <section class="col-lg-9">
+      {% for job in page_obj %}{% include "jobs/_job_card.html" %}
+      {% empty %}{% include "partials/empty.html" with title="No jobs found." text="Try changing your search or filters." icon="bi-search" url=request.path button="Reset search" %}{% endfor %}
+      {% include "partials/pagination.html" %}
+    </section>
+  </div>
+</div>
+{% endblock %}

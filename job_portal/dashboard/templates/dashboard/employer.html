@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Employer Dashboard — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div><h1 class="h3 mb-1">Employer Dashboard</h1><p class="text-muted-jh mb-0">{% if my_company %}{{ my_company.name }}{% else %}Create your company profile to start hiring.{% endif %}</p></div>
+  <a class="btn btn-accent" href="{% url 'jobs:create' %}"><i class="bi bi-plus-lg"></i> Post a Job</a></div></div>
+<div class="container">
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ job_stats.posted }}</div><div class="lbl">Posted Jobs</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ job_stats.active }}</div><div class="lbl">Active Jobs</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ job_stats.closed }}</div><div class="lbl">Closed Jobs</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ app_stats.total }}</div><div class="lbl">Total Applications</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ app_stats.pending }}</div><div class="lbl">Pending</div></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="card-jh stat-card"><div class="num">{{ app_stats.shortlisted }}</div><div class="lbl">Shortlisted</div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-6"><h2 class="h5">Recent jobs</h2>
+      {% for job in recent_jobs %}<div class="card-jh card-static p-3 mb-2 d-flex flex-row justify-content-between align-items-center">
+        <div><a class="fw-semibold text-decoration-none" href="{{ job.get_absolute_url }}">{{ job.title }}</a><div class="small text-muted-jh">Applications: {{ job.app_count }}</div></div>
+        {% include "partials/status_badge.html" with status=job.effective_status label=job.effective_status_label %}</div>
+      {% empty %}{% include "partials/empty.html" with title="You haven't posted any jobs yet." text="Post a job to start receiving applications." icon="bi-briefcase" %}{% endfor %}</div>
+    <div class="col-lg-6"><h2 class="h5">Recent applications</h2>
+      {% for a in recent_apps %}<div class="card-jh card-static p-3 mb-2 d-flex flex-row justify-content-between align-items-center">
+        <div><a class="fw-semibold text-decoration-none" href="{{ a.get_absolute_url }}">{{ a.full_name }}</a><div class="small text-muted-jh">{{ a.job.title }} · {{ a.created_at|date:"d M" }}</div></div>
+        {% include "partials/status_badge.html" with status=a.status label=a.get_status_display %}</div>
+      {% empty %}{% include "partials/empty.html" with title="No applications yet." text="They will appear here as candidates apply." icon="bi-inbox" %}{% endfor %}</div>
+  </div>
+</div>
+{% endblock %}

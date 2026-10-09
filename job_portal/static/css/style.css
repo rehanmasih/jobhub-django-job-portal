@@ -1,0 +1,58 @@
+:root{
+  --jh-ink:#10222b; --jh-primary:#0f5b6b; --jh-primary-dark:#0a3f4b; --jh-accent:#f2a72c;
+  --jh-bg:#f4f7f8; --jh-card:#fff; --jh-muted:#5d6f78; --jh-line:#dfe7ea;
+}
+body{background:var(--jh-bg);color:var(--jh-ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1}
+h1,h2,h3,h4,h5{letter-spacing:-.01em}
+a{color:var(--jh-primary)}
+.text-muted-jh{color:var(--jh-muted)!important}
+.navbar-jh{background:var(--jh-ink)}
+.navbar-jh .navbar-brand{font-weight:800;letter-spacing:.04em;color:#fff}
+.navbar-jh .navbar-brand span{color:var(--jh-accent)}
+.navbar-jh .nav-link{color:#cfe0e5}
+.navbar-jh .nav-link:hover,.navbar-jh .nav-link.active{color:#fff}
+.btn-primary{--bs-btn-bg:var(--jh-primary);--bs-btn-border-color:var(--jh-primary);--bs-btn-hover-bg:var(--jh-primary-dark);--bs-btn-hover-border-color:var(--jh-primary-dark);--bs-btn-active-bg:var(--jh-primary-dark)}
+.btn-outline-primary{--bs-btn-color:var(--jh-primary);--bs-btn-border-color:var(--jh-primary);--bs-btn-hover-bg:var(--jh-primary);--bs-btn-hover-border-color:var(--jh-primary)}
+.btn-accent{background:var(--jh-accent);color:var(--jh-ink);font-weight:600;border:0}
+.btn-accent:hover{background:#dc9420;color:var(--jh-ink)}
+.hero{background:linear-gradient(135deg,var(--jh-primary-dark),var(--jh-primary) 60%,#1b7a8c);color:#fff;padding:4.5rem 0 5rem}
+.hero h1{font-weight:800;font-size:clamp(2.1rem,5vw,3.4rem)}
+.hero .tagline{color:var(--jh-accent);font-weight:600;letter-spacing:.03em}
+.search-box{background:#fff;border-radius:.9rem;padding:.6rem;box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.search-box .form-control,.search-box .form-select{border:0;box-shadow:none}
+.hero-stat{font-size:1.6rem;font-weight:700}
+.section{padding:3rem 0}
+.section-title{font-weight:700;margin-bottom:1.25rem}
+.card-jh{background:var(--jh-card);border:1px solid var(--jh-line);border-radius:.8rem;transition:box-shadow .15s,border-color .15s}
+.card-jh:hover{box-shadow:0 6px 20px rgba(16,34,43,.08);border-color:#c5d3d8}
+.card-static:hover{box-shadow:none;border-color:var(--jh-line)}
+.logo-box{width:56px;height:56px;border-radius:.6rem;border:1px solid var(--jh-line);background:#fff;object-fit:cover;flex:none}
+.logo-initials{display:flex;align-items:center;justify-content:center;background:var(--jh-primary);color:#fff;font-weight:700;border:0}
+.job-title a{color:var(--jh-ink);text-decoration:none;font-weight:650}
+.job-title a:hover{color:var(--jh-primary)}
+.meta-chip{display:inline-flex;align-items:center;gap:.3rem;background:#eef3f5;color:#355360;border-radius:2rem;padding:.15rem .65rem;font-size:.82rem}
+.featured-tag{background:var(--jh-accent);color:var(--jh-ink);font-size:.72rem;font-weight:700;border-radius:.3rem;padding:.1rem .45rem}
+.cat-tile{display:block;text-decoration:none;color:var(--jh-ink);padding:1rem;text-align:center;height:100%}
+.cat-tile i{font-size:1.7rem;color:var(--jh-primary)}
+.stat-card{padding:1.1rem 1.2rem}
+.stat-card .num{font-size:2rem;font-weight:800;line-height:1.1}
+.stat-card .lbl{color:var(--jh-muted);font-size:.9rem}
+.status-badge{font-weight:600;font-size:.78rem;padding:.3em .65em;border-radius:.4rem;border:1px solid transparent;display:inline-flex;align-items:center;gap:.3rem}
+.badge-active,.badge-accepted{background:#e2f5e8;color:#14692f;border-color:#a9dcb9}
+.badge-pending,.badge-draft{background:#fff4d9;color:#7a5600;border-color:#f0d590}
+.badge-reviewed{background:#e4eefc;color:#1d4d95;border-color:#b3cdf2}
+.badge-shortlisted{background:#ece5fa;color:#54309a;border-color:#cbbdec}
+.badge-rejected{background:#fde6e6;color:#a11d1d;border-color:#f0b3b3}
+.badge-closed,.badge-expired{background:#eceff1;color:#4b5a62;border-color:#cfd6da}
+.filter-panel{position:sticky;top:1rem}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--jh-muted)}
+.empty-state i{font-size:2.6rem;color:#a9bcc4}
+.page-header{background:#fff;border-bottom:1px solid var(--jh-line);padding:1.6rem 0;margin-bottom:1.5rem}
+.prose-lines{white-space:pre-line}
+footer.site-footer{background:var(--jh-ink);color:#a9bcc4;padding:2rem 0;margin-top:3rem}
+footer a{color:#dbe8ec}
+.form-label{font-weight:600;font-size:.92rem}
+.errorlist{color:#b02a37;list-style:none;padding:0;margin:.25rem 0 0;font-size:.88rem}
+.table-jh th{font-size:.82rem;color:var(--jh-muted);font-weight:600;background:#f7fafb}
+@media (max-width:991px){.filter-panel{position:static}.hero{padding:3rem 0 3.5rem}}

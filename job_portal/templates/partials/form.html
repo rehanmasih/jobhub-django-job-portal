@@ -1,0 +1,19 @@
+{% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+<div class="row g-3">
+{% for field in form.visible_fields %}
+  <div class="{% if field.field.widget.input_type == 'textarea' or field.widget_type == 'textarea' or field.widget_type == 'radioselect' %}col-12{% else %}col-md-6{% endif %}">
+    {% if field.widget_type == 'checkbox' %}
+      <div class="form-check mt-md-4">{{ field }}<label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+    {% elif field.widget_type == 'radioselect' %}
+      <label class="form-label d-block">{{ field.label }}</label>
+      {% for radio in field %}<div class="form-check">{{ radio.tag }}<label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label></div>{% endfor %}
+    {% else %}
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}</label>
+      {{ field }}
+    {% endif %}
+    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+    {{ field.errors }}
+  </div>
+{% endfor %}
+</div>

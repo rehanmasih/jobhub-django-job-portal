@@ -1,0 +1,28 @@
+<div class="card-jh p-3 mb-3">
+  <div class="d-flex gap-3">
+    {% include "companies/_logo.html" with company=job.company size=56 %}
+    <div class="flex-grow-1 min-w-0">
+      <div class="d-flex justify-content-between align-items-start gap-2">
+        <div>
+          <h3 class="h5 mb-0 job-title"><a href="{{ job.get_absolute_url }}">{{ job.title }}</a>
+            {% if job.is_featured %}<span class="featured-tag ms-1">Featured</span>{% endif %}</h3>
+          <a class="small text-muted-jh text-decoration-none" href="{{ job.company.get_absolute_url }}">{{ job.company.name }}</a>
+        </div>
+        {% if is_seeker %}
+        <form method="post" action="{% url 'jobs:toggle_save' job.slug %}">{% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% if job.pk in saved_ids %}<button class="btn btn-sm btn-warning" title="Remove from saved"><i class="bi bi-bookmark-fill"></i> Saved</button>
+          {% else %}<button class="btn btn-sm btn-outline-secondary" title="Save job"><i class="bi bi-bookmark"></i> Save</button>{% endif %}
+        </form>{% endif %}
+      </div>
+      <div class="d-flex flex-wrap gap-2 my-2">
+        <span class="meta-chip"><i class="bi bi-geo-alt"></i> {{ job.location }}</span>
+        <span class="meta-chip"><i class="bi bi-clock"></i> {{ job.get_job_type_display }}</span>
+        <span class="meta-chip"><i class="bi bi-graph-up"></i> {{ job.get_experience_level_display }}</span>
+        <span class="meta-chip"><i class="bi bi-cash"></i> {{ job.salary_display }}</span>
+        {% if job.is_remote %}<span class="meta-chip"><i class="bi bi-house"></i> Remote</span>{% endif %}
+      </div>
+      <div class="small text-muted-jh">{{ job.category.name }} · Apply by {{ job.deadline|date:"d M Y" }} · Posted {{ job.created_at|timesince }} ago</div>
+    </div>
+  </div>
+</div>

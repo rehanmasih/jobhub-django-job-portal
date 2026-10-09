@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row"><div class="col-lg-9">
+      <p class="tagline mb-2">Find Your Dream Job. Build Your Future.</p>
+      <h1>Find Your Dream Job</h1>
+      <p class="lead mb-4">Discover thousands of opportunities and take the next step in your career.</p>
+      <form class="search-box row g-1 align-items-center" method="get" action="{% url 'jobs:list' %}">
+        <div class="col-md-5"><input class="form-control form-control-lg" name="q" placeholder="Job title or keyword" aria-label="Job title or keyword"></div>
+        <div class="col-md-4"><input class="form-control form-control-lg" name="location" list="loc-list" placeholder="Location" aria-label="Location"><datalist id="loc-list">{% for l in locations %}<option value="{{ l }}">{% endfor %}</datalist></div>
+        <div class="col-md-3 d-grid"><button class="btn btn-accent btn-lg" type="submit"><i class="bi bi-search"></i> Search Jobs</button></div>
+      </form>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <a class="btn btn-light" href="{% url 'jobs:list' %}">Browse Jobs</a>
+        {% if is_employer %}<a class="btn btn-outline-light" href="{% url 'jobs:create' %}">Post a Job</a>
+        {% elif not user.is_authenticated %}<a class="btn btn-outline-light" href="{% url 'accounts:register' %}?role=employer">Post a Job</a>{% endif %}
+      </div>
+      <div class="d-flex gap-4 mt-4">
+        <div><div class="hero-stat">{{ stats.jobs }}</div><small>Open jobs</small></div>
+        <div><div class="hero-stat">{{ stats.companies }}</div><small>Companies</small></div>
+        <div><div class="hero-stat">{{ stats.categories }}</div><small>Categories</small></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="section"><div class="container">
+  <div class="d-flex justify-content-between align-items-end"><h2 class="section-title">Job Categories</h2><a href="{% url 'jobs:categories' %}">All categories</a></div>
+  <div class="row g-3">
+    {% for c in categories %}
+    <div class="col-6 col-md-4 col-lg-2"><a class="card-jh cat-tile" href="{% url 'jobs:list' %}?category={{ c.slug }}">
+      <i class="bi {{ c.icon|default:'bi-briefcase' }}"></i><div class="fw-semibold mt-2">{{ c.name }}</div><small class="text-muted-jh">{{ c.open_count }} open job{{ c.open_count|pluralize }}</small></a></div>
+    {% empty %}<div class="col-12">{% include "partials/empty.html" with title="No categories yet" text="Categories will appear here once they are created." icon="bi-tags" %}</div>{% endfor %}
+  </div>
+</div></section>
+
+<section class="section pt-0"><div class="container">
+  <h2 class="section-title">Featured Jobs</h2>
+  {% for job in featured_jobs %}{% include "jobs/_job_card.html" %}
+  {% empty %}{% include "partials/empty.html" with title="No featured jobs right now" text="Check back soon or browse all jobs." icon="bi-star" url=jobs_url button="" %}{% endfor %}
+</div></section>
+
+<section class="section pt-0"><div class="container">
+  <div class="d-flex justify-content-between align-items-end"><h2 class="section-title">Latest Jobs</h2><a href="{% url 'jobs:list' %}">View all jobs</a></div>
+  {% for job in latest_jobs %}{% include "jobs/_job_card.html" %}
+  {% empty %}{% include "partials/empty.html" with title="No jobs found." text="No open jobs at the moment. Please check back later." icon="bi-briefcase" %}{% endfor %}
+</div></section>
+{% endblock %}

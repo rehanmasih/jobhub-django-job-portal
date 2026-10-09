@@ -1,0 +1,6 @@
+<div class="empty-state card-jh card-static">
+  <i class="bi {{ icon|default:'bi-inbox' }}"></i>
+  <h2 class="h5 mt-3 text-dark">{{ title }}</h2>
+  <p class="mb-3">{{ text }}</p>
+  {% if url %}<a class="btn btn-primary" href="{{ url }}">{{ button }}</a>{% endif %}
+</div>

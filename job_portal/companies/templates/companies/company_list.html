@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Companies — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container">
+  <h1 class="h3 mb-3">Companies</h1>
+  <form class="row g-2" method="get">
+    <div class="col-md-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Company, industry or location" aria-label="Search companies"></div>
+    <div class="col-md-3"><select class="form-select" name="industry" aria-label="Industry"><option value="">All industries</option>{% for i in industries %}<option {% if i == industry %}selected{% endif %}>{{ i }}</option>{% endfor %}</select></div>
+    <div class="col-md-3"><select class="form-select" name="location" aria-label="Location"><option value="">All locations</option>{% for l in locations %}<option {% if l == location %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="col-md-2 d-grid"><button class="btn btn-primary">Search</button></div>
+  </form>
+</div></div>
+<div class="container">
+  <div class="row g-3">
+    {% for c in page_obj %}
+    <div class="col-md-6 col-lg-4"><div class="card-jh p-3 h-100 d-flex flex-column">
+      <div class="d-flex gap-3">{% include "companies/_logo.html" with company=c size=56 %}
+        <div><h2 class="h6 mb-0"><a class="text-decoration-none text-dark" href="{{ c.get_absolute_url }}">{{ c.name }}</a></h2><div class="small text-muted-jh">{{ c.industry }}</div></div></div>
+      <ul class="list-unstyled small my-3 text-muted-jh">
+        <li><i class="bi bi-geo-alt"></i> {{ c.location|default:"—" }}</li>
+        <li><i class="bi bi-people"></i> {% if c.employee_count %}{{ c.employee_count }} employees{% else %}—{% endif %}</li>
+        <li><i class="bi bi-briefcase"></i> {{ c.active_jobs }} active job{{ c.active_jobs|pluralize }}</li></ul>
+      <a class="btn btn-outline-primary btn-sm mt-auto align-self-start" href="{{ c.get_absolute_url }}">View Company</a>
+    </div></div>
+    {% empty %}<div class="col-12">{% include "partials/empty.html" with title="No companies found." text="Try a different search or filter." icon="bi-building" url="/companies/" button="Reset" %}</div>{% endfor %}
+  </div>
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

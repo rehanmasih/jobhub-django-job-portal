@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Saved Jobs — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container"><h1 class="h3 mb-0">My Saved Jobs</h1></div></div>
+<div class="container">
+  {% for saved in page_obj %}
+    {% with job=saved.job %}
+    <div class="card-jh p-3 mb-3"><div class="d-flex gap-3 align-items-center flex-wrap">
+      {% include "companies/_logo.html" with company=job.company size=48 %}
+      <div class="flex-grow-1">
+        <div class="job-title"><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></div>
+        <div class="small text-muted-jh">{{ job.company.name }} · {{ job.location }} · {{ job.salary_display }} · Saved {{ saved.created_at|date:"d M Y" }}</div>
+      </div>
+      {% include "partials/status_badge.html" with status=job.effective_status label=job.effective_status_label %}
+      <form method="post" action="{% url 'jobs:toggle_save' job.slug %}">{% csrf_token %}<input type="hidden" name="next" value="{% url 'jobs:saved' %}"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-bookmark-x"></i> Unsave</button></form>
+    </div></div>
+    {% endwith %}
+  {% empty %}{% include "partials/empty.html" with title="You haven't saved any jobs yet." text="Tap Save on any job to keep it here for later." icon="bi-bookmark" url="/jobs/" button="Browse jobs" %}{% endfor %}
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

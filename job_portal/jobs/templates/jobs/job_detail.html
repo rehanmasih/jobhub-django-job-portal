@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load job_extras %}
+{% block title %}{{ job.title }} at {{ job.company.name }} — JOBHUB{% endblock %}
+{% block content %}
+<div class="page-header"><div class="container">
+  <nav aria-label="breadcrumb"><ol class="breadcrumb small mb-2"><li class="breadcrumb-item"><a href="{% url 'jobs:list' %}">Jobs</a></li><li class="breadcrumb-item active">{{ job.title }}</li></ol></nav>
+  <div class="d-flex gap-3 align-items-start flex-wrap">
+    {% include "companies/_logo.html" with company=job.company size=72 %}
+    <div class="flex-grow-1">
+      <h1 class="h3 mb-1">{{ job.title }} {% include "partials/status_badge.html" with status=job.effective_status label=job.effective_status_label %}</h1>
+      <div><a href="{{ job.company.get_absolute_url }}" class="fw-semibold text-decoration-none">{{ job.company.name }}</a> · {{ job.location }}</div>
+      <div class="d-flex flex-wrap gap-2 mt-2">
+        <span class="meta-chip">{{ job.get_job_type_display }}</span><span class="meta-chip">{{ job.get_experience_level_display }}</span>
+        <span class="meta-chip">{{ job.salary_display }}</span><span class="meta-chip">Remote: {{ job.is_remote|yesno:"Yes,No" }}</span>
+      </div>
+    </div>
+    <div class="d-flex flex-column gap-2" style="min-width:180px">
+      {% if can_apply %}<a class="btn btn-accent btn-lg" href="{% url 'applications:apply' job.slug %}">Apply Now</a>
+      {% elif already_applied %}<button class="btn btn-success btn-lg" disabled><i class="bi bi-check2"></i> Already Applied</button>
+      {% elif apply_reason == 'anonymous' %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:login' %}?next={{ request.path }}">Login to Apply</a>
+      {% else %}<button class="btn btn-secondary btn-lg" disabled>{% if apply_reason == 'deadline' %}Applications Closed{% elif apply_reason == 'not_active' %}Not accepting applications{% else %}Apply Now{% endif %}</button>{% endif %}
+      {% if is_seeker %}
+      <form method="post" action="{% url 'jobs:toggle_save' job.slug %}">{% csrf_token %}
+        {% if is_saved %}<button class="btn btn-warning w-100"><i class="bi bi-bookmark-fill"></i> Saved</button>{% else %}<button class="btn btn-outline-secondary w-100"><i class="bi bi-bookmark"></i> Save Job</button>{% endif %}
+      </form>{% endif %}
+      {% if is_owner %}<a class="btn btn-outline-primary" href="{% url 'jobs:edit' job.slug %}">Edit job</a>{% endif %}
+    </div>
+  </div>
+</div></div>
+<div class="container"><div class="row g-4">
+  <div class="col-lg-8">
+    {% if apply_reason == 'deadline' or apply_reason == 'not_active' %}<div class="alert alert-warning">{% if apply_reason == 'deadline' %}Applications Closed — the deadline for this job has passed.{% else %}This job is not currently accepting applications.{% endif %}</div>{% endif %}
+    {% if job.status == 'draft' %}<div class="alert alert-info">This job is a draft and is only visible to you.</div>{% endif %}
+    <div class="card-jh card-static p-4 mb-3"><h2 class="h5">About the Job</h2><div class="prose-lines">{{ job.description }}</div></div>
+    {% if job.responsibilities %}<div class="card-jh card-static p-4 mb-3"><h2 class="h5">Responsibilities</h2><ul>{% for l in job.responsibilities|lines %}<li>{{ l }}</li>{% endfor %}</ul></div>{% endif %}
+    {% if job.requirements %}<div class="card-jh card-static p-4 mb-3"><h2 class="h5">Requirements</h2><ul>{% for l in job.requirements|lines %}<li>{{ l }}</li>{% endfor %}</ul></div>{% endif %}
+    {% if job.skills_list %}<div class="card-jh card-static p-4 mb-3"><h2 class="h5">Required Skills</h2><div class="d-flex flex-wrap gap-2">{% for s in job.skills_list %}<span class="meta-chip">{{ s }}</span>{% endfor %}</div></div>{% endif %}
+    {% if similar %}<h2 class="h5 mt-4">Similar jobs</h2>{% for job in similar %}{% include "jobs/_job_card.html" %}{% endfor %}{% endif %}
+  </div>
+  <div class="col-lg-4">
+    <div class="card-jh card-static p-4 mb-3">
+      <h2 class="h6">Job overview</h2>
+      <dl class="row small mb-0">
+        <dt class="col-5">Salary</dt><dd class="col-7">{{ job.salary_display }}</dd>
+        <dt class="col-5">Experience</dt><dd class="col-7">{{ job.get_experience_level_display }}</dd>
+        <dt class="col-5">Location</dt><dd class="col-7">{{ job.location }}</dd>
+        <dt class="col-5">Job type</dt><dd class="col-7">{{ job.get_job_type_display }}</dd>
+        <dt class="col-5">Category</dt><dd class="col-7">{{ job.category.name }}</dd>
+        <dt class="col-5">Vacancies</dt><dd class="col-7">{{ job.vacancies }}</dd>
+        {% if job.education_required %}<dt class="col-5">Education</dt><dd class="col-7">{{ job.education_required }}</dd>{% endif %}
+        <dt class="col-5">Deadline</dt><dd class="col-7">{% if job.deadline_passed %}Applications Closed ({{ job.deadline|date:"d F Y" }}){% else %}{{ job.deadline|date:"d F Y" }}{% endif %}</dd>
+      </dl>
+    </div>
+    <div class="card-jh card-static p-4">
+      <h2 class="h6">About {{ job.company.name }}</h2>
+      <p class="small text-muted-jh">{{ job.company.description|truncatewords:35 }}</p>
+      <ul class="list-unstyled small mb-3">
+        {% if job.company.industry %}<li><i class="bi bi-building"></i> {{ job.company.industry }}</li>{% endif %}
+        {% if job.company.website %}<li><i class="bi bi-globe"></i> {{ job.company.website }}</li>{% endif %}
+      </ul>
+      <a class="btn btn-outline-primary btn-sm" href="{{ job.company.get_absolute_url }}">View company</a>
+    </div>
+  </div>
+</div></div>
+{% endblock %}

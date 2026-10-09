@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Register — JOBHUB{% endblock %}
+{% block content %}
+<div class="container section"><div class="row justify-content-center"><div class="col-lg-8">
+  <div class="card-jh card-static p-4">
+    <h1 class="h4 mb-1">Create your JOBHUB account</h1>
+    <p class="text-muted-jh">Choose whether you're looking for work or hiring.</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {% include "partials/form.html" with form=form %}
+      <button class="btn btn-primary mt-4" type="submit">Create account</button>
+      <span class="ms-2 small">Already registered? <a href="{% url 'accounts:login' %}">Login</a></span>
+    </form>
+  </div>
+</div></div></div>
+{% endblock %}
